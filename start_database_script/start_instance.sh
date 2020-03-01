@@ -1,0 +1,1 @@
+docker run --rm --name store -d -p 27017:27017 -v store:/data/db mongo:3.6.17
