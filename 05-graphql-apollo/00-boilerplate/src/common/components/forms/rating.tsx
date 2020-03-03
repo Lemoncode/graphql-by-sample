@@ -11,13 +11,24 @@ interface Props extends FieldRenderProps<any, any> {
 export const RatingComponent: React.FunctionComponent<Props> = props => {
   const { input, meta, max } = props;
 
-  const showError =
+  const showError = Boolean(
     ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
-    meta.touched;
+      meta.touched
+  );
+
+  const handleChange = (e, newValue) => {
+    input.onChange(newValue);
+  };
 
   return (
     <Box component="div" mb={3} borderColor="transparent">
-      <Rating {...input} max={max} size="large" />
+      <Rating
+        {...input}
+        value={Number(input.value)}
+        onChange={handleChange}
+        max={max}
+        size="large"
+      />
       {showError && (
         <Typography variant="caption" color="error" gutterBottom>
           {meta.error}

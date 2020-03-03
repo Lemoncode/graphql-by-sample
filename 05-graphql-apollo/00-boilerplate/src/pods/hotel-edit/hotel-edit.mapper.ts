@@ -13,3 +13,14 @@ export const mapHotelFromApiToModel = (
   description: hotel.shortDescription,
   rating: hotel.hotelRating,
 });
+
+export const mapHotelFromModelToApi = (
+  hotel: viewModel.HotelEntityVm
+): apiModel.HotelEditApi => ({
+  id: hotel.id,
+  name: hotel.name,
+  address1: hotel.address,
+  city: hotel.city,
+  shortDescription: hotel.description,
+  hotelRating: hotel.rating,
+});

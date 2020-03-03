@@ -35,3 +35,12 @@ export interface Hotel {
   tripAdvisorRating: number;
   tripAdvisorRatingUrl: string;
 }
+
+export interface HotelEdit {
+  id: string;
+  name: string;
+  address1: string;
+  city: string;
+  shortDescription: string;
+  hotelRating: number;
+}

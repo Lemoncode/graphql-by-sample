@@ -35,3 +35,12 @@ export interface HotelEntityApi {
   tripAdvisorRating: number;
   tripAdvisorRatingUrl: string;
 }
+
+export interface HotelEditApi {
+  id: string;
+  name: string;
+  address1: string;
+  city: string;
+  shortDescription: string;
+  hotelRating: number;
+}

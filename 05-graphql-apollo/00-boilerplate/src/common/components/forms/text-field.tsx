@@ -11,9 +11,10 @@ export const TextField: React.FunctionComponent<Props> = props => {
     ...rest
   } = props;
 
-  const showError =
+  const showError = Boolean(
     ((meta.submitError && !meta.dirtySinceLastSubmit) || meta.error) &&
-    meta.touched;
+      meta.touched
+  );
 
   return (
     <TextFieldMui
