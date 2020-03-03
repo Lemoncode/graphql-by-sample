@@ -20,16 +20,70 @@ npm install
 
 # Libraries
 
-- We are going to install the main library to work with graphql and express, [apollo-server-express](https://www.npmjs.com/package/apollo-server-express). ([Documentation page](https://www.apollographql.com/docs/apollo-server/))
+- We are going to install a library to work with graphql in front side, [graphql-request](https://github.com/prisma-labs/graphql-request).
 
 ```bash
-cd ./server
-npm install apollo-server-express --save
+npm install graphql-request --save
 ```
+
+> Install this library on frontend package.json
+
+# Other libraries
+
+- [relay](https://github.com/facebook/relay)
+- [apollo-client](https://github.com/apollographql/apollo-client)
 
 # Config
 
-- ApolloServer comes with types definitions and we don't need an extra package for TypeScript. We have to define a new `ApolloServer` instance to create a new `GraphQL Server`:
+- `graphql-request` has TypeScript support and we don't need an extra package:
+
+### ./core/graphql.client.ts
+
+```javascript
+import { GraphQLClient } from 'graphql-request';
+
+// TODO: Move to env variable
+const url = 'http://localhost:3000/graphql';
+
+export const graphQLClient = new GraphQLClient(url);
+
+```
+
+- Update `hotel-collection` api:
+
+### ./src/pods/hotel-collection/api/hotel-collection.api.ts
+
+```diff
+- import Axios from 'axios';
+- import { baseApiUrl } from 'core';
++ import { graphQLClient } from 'core/graphql.client';
+import { HotelEntityApi } from './hotel-collection.api-model';
+
+- const url = `${baseApiUrl}/api/hotels`;
++ const query = `
++   query {
++     hotels {
++       id
++       name
++       shortDescription
++       hotelRating
++       address1
++       thumbNailUrl
++     }
++   }
++ `;
+
++ interface Response {
++   hotels: HotelEntityApi[];
++ }
+
+export const getHotelCollection = (): Promise<HotelEntityApi[]> =>
+- Axios.get(url).then(({ data }) => data);
++ graphQLClient.request<Response>(query).then(res => res.hotels);
+
+```
+
+> Check `Chrome Network` content size. 11.7KB vs 3.5KB
 
 # About Basefactor + Lemoncode
 

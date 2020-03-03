@@ -1,8 +1,22 @@
-import Axios from 'axios';
-import { baseApiUrl } from 'core';
+import { graphQLClient } from 'core/graphql.client';
 import { HotelEntityApi } from './hotel-collection.api-model';
 
-const url = `${baseApiUrl}/api/hotels`;
+const query = `
+  query {
+    hotels {
+      id
+      name
+      shortDescription
+      hotelRating
+      address1
+      thumbNailUrl
+    }
+  }
+`;
+
+interface Response {
+  hotels: HotelEntityApi[];
+}
 
 export const getHotelCollection = (): Promise<HotelEntityApi[]> =>
-  Axios.get(url).then(({ data }) => data);
+  graphQLClient.request<Response>(query).then(res => res.hotels);
