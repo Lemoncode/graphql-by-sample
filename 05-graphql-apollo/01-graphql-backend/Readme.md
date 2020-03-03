@@ -128,6 +128,8 @@ export const typeDefs = gql`
 `;
 ```
 
+> [Scalar Types](https://graphql.org/learn/schema/#scalar-types)
+
 - Implementing resolvers:
 
 ### ./server/src/graphql/resolvers.ts
