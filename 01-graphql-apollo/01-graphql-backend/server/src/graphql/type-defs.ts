@@ -5,14 +5,12 @@ export const typeDefs = gql`
     id: String!
     type: String!
     name: String!
-    created: Int!
-    modified: Int!
     address1: String!
     city: String!
-    hotelRating: Int!
+    hotelRating: Float!
     shortDescription: String!
     thumbNailUrl: String!
-    tripAdvisorRating: Int!
+    tripAdvisorRating: Float!
     tripAdvisorRatingUrl: String!
   }
 

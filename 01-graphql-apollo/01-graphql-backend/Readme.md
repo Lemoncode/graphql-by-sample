@@ -111,14 +111,12 @@ export const typeDefs = gql`
     id: String!
     type: String!
     name: String!
-    created: Number!
-    modified: Number!
     address1: String!
     city: String!
-    hotelRating: Number!
+    hotelRating: Float!
     shortDescription: String!
     thumbNailUrl: String!
-    tripAdvisorRating: Number!
+    tripAdvisorRating: Float!
     tripAdvisorRatingUrl: String!
   }
 
