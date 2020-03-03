@@ -1,4 +1,4 @@
-# 01 GraphQL Frontend
+# 02 GraphQL Frontend
 
 In this example we are going to add a basic setup needed to support GraphlQL in frontend.
 
