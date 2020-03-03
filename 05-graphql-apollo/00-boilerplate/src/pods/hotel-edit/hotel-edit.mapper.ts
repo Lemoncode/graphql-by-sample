@@ -1,14 +1,15 @@
 import { basePicturesUrl } from 'core';
 import * as apiModel from './api';
-import * as viewModel from './hotel-collection.vm';
+import * as viewModel from './hotel-edit.vm';
 
-export const mapFromApiToVm = (
+export const mapHotelFromApiToModel = (
   hotel: apiModel.HotelEntityApi
 ): viewModel.HotelEntityVm => ({
   id: hotel.id,
-  picture: `${basePicturesUrl}${hotel.thumbNailUrl}`,
   name: hotel.name,
+  picture: `${basePicturesUrl}${hotel.thumbNailUrl}`,
+  address: hotel.address1,
+  city: hotel.city,
   description: hotel.shortDescription,
   rating: hotel.hotelRating,
-  address: hotel.address1,
 });

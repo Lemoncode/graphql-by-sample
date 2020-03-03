@@ -178,7 +178,7 @@ export const mockHotels: Hotel[] = [
     highRate: 188.202,
     hotelId: 113426,
     hotelInDestination: true,
-    hotelRating: 3.5,
+    hotelRating: 3,
     location: {
       latitude: 47.61381,
       longitude: -122.33686,
@@ -258,7 +258,7 @@ export const mockHotels: Hotel[] = [
     highRate: 159,
     hotelId: 191964,
     hotelInDestination: true,
-    hotelRating: 3.5,
+    hotelRating: 3,
     location: {
       latitude: 47.66143,
       longitude: -122.31429,
@@ -298,7 +298,7 @@ export const mockHotels: Hotel[] = [
     highRate: 210,
     hotelId: 213497,
     hotelInDestination: true,
-    hotelRating: 4,
+    hotelRating: 5,
     location: {
       latitude: 47.60688,
       longitude: -122.33361,
@@ -317,7 +317,7 @@ export const mockHotels: Hotel[] = [
       'With a stay at W Seattle, you&apos;ll be centrally located in Seattle, steps from Seattle Public Library and Safeco Headquarters. This 4-star hotel is close to Pike Place',
     stateProvinceCode: 'WA',
     thumbNailUrl: '/thumbnails/284304_50_t.jpg',
-    tripAdvisorRating: 4,
+    tripAdvisorRating: 5,
     tripAdvisorRatingUrl:
       'http://www.tripadvisor.com/img/cdsi/img2/ratings/traveler/4.0-12345-4.gif',
   },

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { HotelEntityVm } from './hotel-collection.vm';
-import { getHotelCollection } from './hotel-collection.api';
+import { getHotelCollection } from './api';
 import { mapFromApiToVm } from './hotel-collection.mapper';
 import { mapToCollection } from 'common/mappers';
 

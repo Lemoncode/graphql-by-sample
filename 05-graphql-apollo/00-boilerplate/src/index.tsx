@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { HashRouter, Switch, Route } from 'react-router-dom';
-import { HotelCollectionScene } from './scenes';
+import { HotelCollectionScene, HotelEditScene } from './scenes';
 import { switchRoutes } from 'core';
 
 ReactDOM.render(
@@ -14,7 +14,7 @@ ReactDOM.render(
       />
       <Route
         path={switchRoutes.hotelEdit}
-        component={() => <h1>Hotel edit</h1>}
+        component={HotelEditScene}
       />
     </Switch>
   </HashRouter>,
