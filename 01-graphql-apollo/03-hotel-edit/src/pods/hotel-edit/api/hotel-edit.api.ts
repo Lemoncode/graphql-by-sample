@@ -1,9 +1,5 @@
-import Axios from 'axios';
-import { baseApiUrl } from 'core';
 import { graphQLClient } from 'core/graphql.client';
 import { HotelEntityApi, HotelEditApi } from './hotel-edit.api-model';
-
-const url = `${baseApiUrl}/api/hotels`;
 
 interface GetHotelResponse {
   hotel: HotelEntityApi;
@@ -27,5 +23,20 @@ export const getHotel = (id): Promise<HotelEntityApi> => {
   return graphQLClient.request<GetHotelResponse>(query).then(res => res.hotel);
 };
 
-export const saveHotel = (hotel: HotelEditApi): Promise<boolean> =>
-  Axios.patch(`${url}/${hotel.id}`, hotel);
+interface SaveHotelResponse {
+  saveHotel: boolean;
+}
+
+export const saveHotel = (hotel: HotelEditApi): Promise<boolean> => {
+  const query = `
+    mutation($hotelEdit: HotelEdit!) {
+      saveHotel(hotelEdit: $hotelEdit)
+    }
+  `;
+
+  return graphQLClient
+    .request<SaveHotelResponse>(query, {
+      hotelEdit: hotel,
+    })
+    .then(res => res.saveHotel);
+};

@@ -18,4 +18,17 @@ export const typeDefs = gql`
     hotels: [Hotel!]!
     hotel(id: ID!): Hotel!
   }
+
+  input HotelEdit {
+    id: String!
+    name: String!
+    address1: String!
+    city: String!
+    hotelRating: Float!
+    shortDescription: String!
+  }
+
+  type Mutation {
+    saveHotel(hotelEdit: HotelEdit!): Boolean
+  }
 `;
