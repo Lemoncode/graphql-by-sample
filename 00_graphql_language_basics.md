@@ -1,14 +1,14 @@
 # GraphQL Language Basics
 
-* La herramienta de edición se llama __GraphiQL__ 
+* The editor tool is called __GraphiQL__ 
 
-* Podemos visitar un servidor de GraphQL en https://www.graphqlhub.com/playground?query=%23%20Welcome%20to%20GraphQLHub!%20Type%20your%20GraphQL%20query%20here%2C%20or%0A%23%20explore%20the%20%22Docs%22%20to%20the%20right%0A
+* We can play with online tool at https://www.graphqlhub.com/playground?query=%23%20Welcome%20to%20GraphQLHub!%20Type%20your%20GraphQL%20query%20here%2C%20or%0A%23%20explore%20the%20%22Docs%22%20to%20the%20right%0A
 
-## 1. Explorando el navegador:
+## 1. Playing with tool:
 
-Al arrancar __GraphiQL__ carga todas las capacidades que ofrece el servidor de __GraphQL__
+On start __GraphiQL__ gets all capabilities of the GraphQL server.
 
-Introducir la siguiente query dentro del editor y utilizar el botón de play
+- Type the following query and click on play button:
 
 ```
 query TestQuery {
@@ -16,41 +16,46 @@ query TestQuery {
 }
 ```
 
-Nos da como resultado una descripción del propio servidor. Vamos a hacer algo un poco más ambicioso:
+- It returns a server description. Let's add more fields to it:
 
+```diff
+query TestQuery {
+  graphQLHub
++ github {
++   user(username: "jaimesalas") {
++     id
++     login
++     avatar_url
++     company
++   }
++ }
+}
 ```
+
+> NOTE: replace `jaimesalas` with a valid github user name
+
+- As we known, __username__ is a required field. We can check `Docs` section on right side to provide necessary input fields, returned types, etc. For example, we can add user's repositories to the  _query_.
+
+```diff
 query TestQuery {
   graphQLHub
   github {
     user(username: "jaimesalas") {
-      id,
-      avatar_url,
+      id
+      login
+      avatar_url
       company
-    }
-  }
-}
-```
-Como podemos comprobar __username__ es un campo requerido. El editor nos da feedback de los campos y como debemos alimentarlos. Por ejemplo podemos extender la _query_ para visualizar los repositorios asociados a un usuario.
-
-```
-query TestQuery {
-  graphQLHub
-  github {
-    user(username: "jaimesalas") {
-      id,
-      avatar_url,
-      company,
-      repos {
-        name
-      }
++     repos {
++       name
++     }
     }
   }
 }
 ```
 
-## 1. Ejercicio.
+## 1. Exercise.
 
-Crear una _query_ que muestre los _commits_ realizados sobre el repositorio de __GraphQL__
+Make a _query_ to show a repository's _commits_, i.e. `GraphQL` repository which owner is `Facebook`:
 
 ```
 query OtherQuery {
@@ -69,18 +74,25 @@ query OtherQuery {
 }
 ```
 
+## 2. Fields and Types.
 
+- [Scalar Types](https://graphql.org/learn/schema/#scalar-types)
 
-## 2. Fields. Campos escalares y complejos.
+- [Enumeration Types](https://graphql.org/learn/schema/#enumeration-types)
+
+- [List](https://graphql.org/learn/schema/#lists-and-non-null)
+
+- [Object Types](https://graphql.org/learn/schema/#object-types-and-fields)
 
 ```
 query TestQuery {
   graphQLHub
   github {
     user(username: "jaimesalas") {
-      id,
-      avatar_url,
-      company,
+      id
+      login
+      avatar_url
+      company
       repos {
         name
       }
@@ -89,62 +101,55 @@ query TestQuery {
 }
 ```
 
-* Recapitulando:
-  - Podemos usar nombres sobre las _queries_
-  - Los campos de GraphiQL son tipos en azul, tenemos campos escalares y campos comlejos como _user_.
-  - _repos_ representa una lista de objetos.
-  - Los campos GraphQL (scalar y complex) son modelados después de las funciones. Aceptan argumentos, y devuelven algo en la respuesta. En el servidor escribiremos funciones de JavaScript para determinar el valor devuelto por cada campo. Por ejemplo la función que resuelve _graphQLHub_ determina que tenemos que responder con:
+* Summary:
+  - We can name the _queries_.
+
+  - The Graphql `fields` (blue color) could belong to `scalar` (String, Int, etc) or another type like `GithubUser`.
+
+  - It has optional or required fields (using `!`).
+
+    - _repos_ is an optional object list: `repos: [GithubRepo]`.
+
+  - GraphQL fields are modeled as functions (`resolvers`). It accepts arguments or not, and it returns some type as response. The server implements the `resolver` to be executed for each field (in Javascript or whatever server language). For example, the _graphQLHub_ field always returns the following string:
 
 ```json
   "graphQLHub": "Use GraphQLHub to explore popular APIs with GraphQL! Created by Clay Allsopp @clayallsopp"
 ```
-  - El campo _user_ acepta un argumento y utiliza ese argumento en la función para resolver los datos.
-  - Los campos escalares son los tipos básicos, representan valores primitivos como _strings_ y _integers_
-  - Los campos que representan objetos normalmente son un tipo _custom_
-  - Los campos de colección, como _repos_, son listas que contienen objetos de un determinado tipo.
-  - Los espacios, `,` son opcionales. 
+  - The _user_ field accepts one argument and uses that argument on the resolver function.
+  - Scalar fields are the basic types, they represent primitive values like _strings_ and _integers_. 
+  - The fields that represent objects usually have a _custom_ type.
+  - The collection fields, like _repos_, are lists that contain objects of ceratin types.
+  - Spaces and `,` are optional. 
 
 
 ## 3. Variables
 
-* Las variables pueden ser de cualquier tipo.
-* Las variables son declaradas en un contexto.
+* Variables could be of any type.
+* They are declared on a context.
 
-Por ejemplo la siguiente query tiene un valor _hard coded_, vamos a reemplazarlo por una variable:
-
-```
-query TestQuery {
-  github {
-    user(username: "jaimesalas") {
-      id,
-      avatar_url,
-      company,
-      repos {
-        name
-      }
-    }
-  }
-}
-```
+For example in the next query we have a _hard coded_ value, let's replace it to use a variable:
 
 ```diff
--query TestQuery {
-+query TestQuery($currentUserName: String!) {
-  github {
--   user(username: "jaimesalas") {
-+   user(username: $currentUserName) {
-      id,
-      avatar_url,
-      company,
-      repos {
-        name
+- query TestQuery {
++ query TestQuery($currentUserName: String!) {
+    graphQLHub
+    github {
+-     user(username: "jaimesalas") {
++     user(username: $currentUserName) {
+        id
+        login
+        avatar_url
+        company
+        repos {
+          name
+        }
       }
     }
   }
-}
+
 ```
 
-Ahora podemos alimentar la variable usando formato _json_
+Now we can feed the variable using _json_ format:
 
 ```json
 {
@@ -152,15 +157,15 @@ Ahora podemos alimentar la variable usando formato _json_
 }
 ```
 
+> If you want create a `custom` variable type, you have to use [input](https://graphql.org/learn/schema/#input-types) type.
+
 ## 4. Directives
 
-Algunas veces utilizando simplemente los argumentos de los campos para personalizar el comportamineto de ejecución del motor del servidor GraphQL no es suficiente. Por ejemplo, imaginemos que tenemos una variable especial en nuestra aplicación, que se llama _includeRepos_, y la queremos personalizar el servidor de GraphQL para que en la respuesta sólo incluya los repos si esta variable tiene el valor _true_, y que omita completamente la lista de repos si _includeRepos_ tiene el valor _false_.
+Sometimes using just the field arguments to customize the behavior of the GraphQL server execution engine will not be enough. For example, what if we had a special variable in our application, call it _includeRepos_, and we want to customize the GraphQL server response to only include the repo list when this variable is set to _true_, and completely omit the repos list from the response when the _includeRepos_ variable is set to _false_.
 
-The best way to do this in GraphQL is witha adirective. Directives can be used to alter the GraphQL runtime execution, and they are commonly used  with variables to customize the reponse based on the variables values.
+The best way to do this in GraphQL is with a _directive_. Directives can be used to alter the GraphQL _runtime_ execution, and they are commonly used  with variables to customize the reponse based on the variables values.
 
-La mejor forma de hacer esto es mediante un _directiva_. Las directiivas pueden ser usadas para alterar la ejecución del _runtime_ de GraphQL, y son normalmente utilizadas con variables para personalizar la respuesta basada en los valores de las variables.
-
-* built-in directives -> _skip_, _include_, ambas pueden ser usadas en campos y fragmentos.
+* built-in directives -> _skip_, _include_, both can be used on fields and fragments.
 
 ```diff
 query TestQuery(
@@ -183,13 +188,13 @@ query TestQuery(
 
 ## 5. Aliases.
 
-Algunas veces el _data_ expuesto por el servdor puede tener distintos nombres de propiedades con respecto a lo que está utilizando la UI.
+Sometimes the _data_ exposed by the server might have different property names from what the UI is using.
 
-Por ejemplo asumamos, que nuestra UI usa una variable llamada _githubid_ en lugar de simplemente _Id_. Tendremos ahora una desincronización entre la respuesta del servidor, que tiene `id` para la _key_ de su valor, y el componente de UI, que espera la propiedad `githubid`. Normalmente esto lo salvamos procesando la respuesta mediante _mappers_.
+For example, let's assume our UI uses a variable called _githubid_ instead of just _Id_. Now we would have a mismatch between the server response, which has "id" as the key to this value, and the UI component, which expects the property to be "githubid". This usually means that we would need to process the server response on the client to make it match what the UI is using. 
 
-Los _aliases_ de GraphQL pueden ayudar a evitar este procesamiento extra. Simplemente podemos usar un _nombre alias_ en la _query_ para renombrar la _key_ usada en la respuesta del servidor. _githubid_ es _id_, y cuando lo ejecutamos, la respuesta estará lista para la UI. No se necesita más procesamiento.
+GraphQL _aliases_ can help us avoid this extra processing. We can simply use an alias name in the query to rename the key used in the server response. _githubid_ is _id_, and when we execute that, the response will be just ready for the UI. No further processing needed.
 
-Podemos usar alias en cualquier campo para personalizar su apariencia en la respuesta.
+We can use aliases on any field to customize its appearance in the response.
 
 ```diff
 query TestQuery(
@@ -210,14 +215,15 @@ query TestQuery(
 }
 ```
 
-> NOTA: Pdemos usar los alias para preguntar por el mismo campo más de una vez. 
+> NOTE: We can also use aliases to ask for the same field more than once. 
 
 
 ## 6. Fragments
 
-Los _fragments_ es lo que hace GraphQL _composable_.
+_Fragments_ are what make GraphQL _composable_. 
 
-En este ejemplo, repetimos los campos de información del _user_ en nuestra _query TwoUsers_ dos veces, una por cada usuario.
+In the next example, we repeated the _user_ information fields in our _TwoUsers query_ twice, once for every user. 
+
 
 ```
 query TwoUsers(
@@ -246,8 +252,7 @@ query TwoUsers(
 }
 ```
 
-Si después decidimos pedir un campo extra en cada objeto _user_, tendremos que cambiar en nuestra _query_ en dos sitios distintos, lo que no es ideal. Podemos usar los _GraphQL fragments_ para refactorizar está repetición y componer nuestra _query_ principal utilizando una _query_ más pequeña que represente los campos del usuario de GitHub.
-
+If we later decide to ask for an extra field on every _user_ object, we'll have to change two places in our query, which is not ideal. We can use _GraphQL fragments_ to refactor this repetition and compose our main _query_ using a smaller _query_ fragment that represents the fields on a GitHub user.
 
 ```diff
 query TwoUsers(
@@ -275,7 +280,7 @@ query TwoUsers(
 +}
 ```
 
-Con esto podemos usar el fragment sea donde sea que estos campos son requeridos.
+With this on place we can use it where ever these fields are requested. A _fragment_ is a partial operation, we can use it by its own but we can use it and reuse it inside a full opertion.
 
 ```diff
 query TwoUsers(
@@ -299,11 +304,11 @@ query TwoUsers(
 }
 ```
 
-> NOTA: El contenido del fragment tiene que encajar en el sitio que es usado.
+> NOTE: The content of the fragment has to fit in the place where it's used.
 
 ## 7. Inline Fragments
 
-Podemos utilizar los fragmentos en modo en línea.
+We can use fragment inline style:
 
 ```diff
 query TwoUsers(
@@ -317,22 +322,22 @@ query TwoUsers(
     userB: user(username: $userB) {
 -     ...UserInfo
 +     ... on GithubUser {
-        id,
-        company,
-        avatar_url
-      }
++       id,
++       company,
++       avatar_url
++     }
     }
   }
 }
 ```
 
-## 8. Interface y Union
+## 8. Interface and Union
 
-En GraphQL, podemos definir un tipo de grupo el cual puede ser tanto una _interface_ o una _union_ de múltiples tiops. Esto tipos son básicamente nos permiten combinar múltiples tipos en un único campo. ¿Pero por qué usarlos? A veces los objetos tienen diferentes tipos en función de cómo son usados.
+In GraphQL, we can define a group type which can be either an _interface_ or a _union_ of multiple types. Those types basically allow us to combine multiple types for a single field. However, why would we need to do so? Sometimes objects have different types based on how we use them.
 
-Por ejemplo en unn esquema de base de datos un _person_ ouede ser tanto un _employee_ como un _vendor_. En GraphQL podemos modelar esta relación con un _interface_. Decimos que _PersonType_ es una _interface_, y ambos _EmployeeType_ y _VendorType_ implementan _PersonType interface_.
+In a company's people database, a person can be either an employee or a vendor. In GraphQL, we model this relation with an _interface_ type. We say a PersonType is an _interface_, and both EmployeeType and VendorType implement this PersonType _interface_.
 
-A veces un objeto puede ser representado por uno de dos tipos. Por ejemplo, el _author_ de un `commit` de un repo de Github puede ser un _user_ de la plataforma GitHub o un _guest_ que no posee un _username_ de GitHub. Pero ambos tipos representan un objeto _uthor_ En GraphQL podemos modelar esta realción con un tipo _union_, decimos que un _AuthorType_ es un _union_ de ambos un _Github User_, y de un _Guest Commit Author_
+Sometimes an object can be represented by one of two types. For example, the author of a GitHub repo commit can be a user of the GitHub platform or a guest user that does not have a GitHub username. But both of these types represent an author object. In GraphQL, we model this relation with a _union_ type, we say an AuthorType is a _union_ of both GitHub User, and a guest CommitAuthor.
 
 ```
 {
@@ -356,7 +361,7 @@ A veces un objeto puede ser representado por uno de dos tipos. Por ejemplo, el _
 
 ## 9. Mutations
 
-Para actualizar datos, usamos _mutations_
+Updating data, this can be done using _mutations_
 
 ```
 mutation AddResource($input: CreateLinkInput!) {
@@ -381,4 +386,4 @@ mutation AddResource($input: CreateLinkInput!) {
 }
 ```
 
-Todas las operaciones _mutation_ devuelven algo al cliente, en este caso por ejemplo _linkEdge_.
+All mutation opertions returns something to the client, in this case _linkEdge_.
