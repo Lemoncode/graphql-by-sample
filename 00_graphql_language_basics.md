@@ -16,7 +16,12 @@ query TestQuery {
 }
 ```
 
-- It returns a server description. Let's add more fields to it:
+- It returns a server description. 
+```json
+  "graphQLHub": "Use GraphQLHub to explore popular APIs with GraphQL! Created by Clay Allsopp @clayallsopp"
+```
+
+Let's add some more fields to it:
 
 ```diff
 query TestQuery {
@@ -157,13 +162,13 @@ Now we can feed the variable using _json_ format:
 }
 ```
 
-> If you want create a `custom` variable type, you have to use [input](https://graphql.org/learn/schema/#input-types) type.
+> If you want to create a `custom` variable type, you have to use [input](https://graphql.org/learn/schema/#input-types) type.
 
 ## 4. Directives
 
 Sometimes using just the field arguments to customize the behavior of the GraphQL server execution engine will not be enough. For example, what if we had a special variable in our application, call it _includeRepos_, and we want to customize the GraphQL server response to only include the repo list when this variable is set to _true_, and completely omit the repos list from the response when the _includeRepos_ variable is set to _false_.
 
-The best way to do this in GraphQL is with a _directive_. Directives can be used to alter the GraphQL _runtime_ execution, and they are commonly used  with variables to customize the reponse based on the variables values.
+The best way to do this in GraphQL is with a _directive_. Directives can be used to alter the GraphQL _runtime_ execution, and they are commonly used with variables to customize the reponse based on the variables values.
 
 * built-in directives -> _skip_, _include_, both can be used on fields and fragments.
 
@@ -183,6 +188,15 @@ query TestQuery(
       }
     }
   }
+}
+```
+
+Please, note that you will also need to add includeRepos in your query variables
+
+```diff json
+{
++  "currentUserName": "jaimesalas",
++ "includeRepos": false
 }
 ```
 
@@ -280,7 +294,8 @@ query TwoUsers(
 +}
 ```
 
-With this on place we can use it where ever these fields are requested. A _fragment_ is a partial operation, we can use it by its own but we can use it and reuse it inside a full opertion.
+With this on place we can use it wherever these fields are requested. 
+A _fragment_ is a partial operation, that we can use by its own but we can also use it and reuse it inside a full opertion.
 
 ```diff
 query TwoUsers(
